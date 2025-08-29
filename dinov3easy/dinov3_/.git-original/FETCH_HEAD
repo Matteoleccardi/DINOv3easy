@@ -1,0 +1,4 @@
+ffb4bb89c6558ca3244655c25a3955d01788b732		branch 'main' of https://github.com/facebookresearch/dinov3
+bbc5d61151def2ba23c7352fdce75732913d0d1a	not-for-merge	branch 'fix-license-references' of https://github.com/facebookresearch/dinov3
+f12859addd57769c9e6bbe2a1d094500adc88eb6	not-for-merge	branch 'fix-model-card-7b' of https://github.com/facebookresearch/dinov3
+ad43346770d8830b3ad9fbfd44db437fd4c7c73f	not-for-merge	branch 'fix-readme-figure' of https://github.com/facebookresearch/dinov3
