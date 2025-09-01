@@ -8,7 +8,7 @@ Some considerations that might prove useful:
 
 
 
-## How to use it
+## Get Started with DINO v3
 
 This is an installable package, so just do:
 
@@ -17,20 +17,18 @@ This is an installable package, so just do:
 python -m pip install git+https://github.com/Matteoleccardi/DINOv3easy.git
 ```
 
-That's it!
+You will have to download the dinov3 weights from the facebookresearch repository. By default here, only the weights
+of `dinov3_vits16` are downloaded, the others are too heavy for github.
 
-Now, let's go through the package structure real quick:
+Please follow the quick steps explained in [dinov3easy/checkpoints/download_instructions](./dinov3easy/checkpoints/download_instructions.md)
 
-```bash
-DINOv3easy/
-├── dino/
-│   ├── __init__.py
-│   ├── dino.py
-│   └── utils.py
-├── tests/
-│   ├── __init__.py
-│   └── test_dino.py
-└── README.md
-```
+## How to use it
 
-dino -> dino -> layers -> attention modified from the original one to compute the attention matrix explicitly upon request, useful for later visualization.
+You can install the repo and use the helper functions found in the many sub-modules.
+
+For quick, interactive visualization, you can run the scripts found in `./dinov3easy/view/interactive*`.
+
+
+## Note that...
+
+dinov3 -> dinov3 -> layers -> attention modified from the original one to compute the attention matrix explicitly upon request, useful for later visualization.

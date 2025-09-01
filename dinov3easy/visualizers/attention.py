@@ -3,9 +3,6 @@ import matplotlib.pyplot as plt
 from matplotlib import cm
 
 
-# In this file are declared the clkasses used to interactively (or not)
-# visualize stuff.
-
 class AttentionMapInteractiveVisualizer():
     def __init__(self, image: numpy.ndarray, attention_map: numpy.ndarray, suptitle: str = "Attention Map"):
         """
@@ -27,7 +24,7 @@ class AttentionMapInteractiveVisualizer():
         self.fig.tight_layout()
         self.fig.suptitle(self.suptitle)
         self.ax.axis('off')
-
+        
         self.image_artist = None
         self.attn_map_artist = None
         self.patch_position_artist = None
@@ -44,7 +41,7 @@ class AttentionMapInteractiveVisualizer():
             int(self.attention_map.shape[0]**0.5)
         )
         attention_map_2d = (attention_map_2d - attention_map_2d.min()) / (attention_map_2d.max() - attention_map_2d.min() + 1e-5)
-        attention_map_2d_img = self.attention_colormap(attention_map_2d)
+        attention_map_2d_img = self.attention_colormap(attention_map_2d) # from scalar to RGBA image
         attention_map_2d_img[..., -1] = (attention_map_2d)*0.75
         attention_map_2d_img = numpy.kron(attention_map_2d_img, numpy.ones((self.patch_size, self.patch_size, 1)))
         

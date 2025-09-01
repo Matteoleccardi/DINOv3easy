@@ -8,16 +8,16 @@ def pca_of_features(features: torch.Tensor | numpy.ndarray, n_components: int = 
 
     # Input
 
-        `features`: (torch.Tensor) The features to perform PCA on. Accepted shapes are:
-        - (T, C) where T is the number of tokens (patches) and C is the feature dimension (channels).
-        - (B, T, C) where B is the batch size, T is the number of tokens (patches), and C is the feature dimension (channels).
-        - (B, C, K1, K2) where B is the batch size, C is the feature dimension (channels), and K1, K2 are the spatial dimensions.
-        - (B, C, K1, K2, K3) where B is the batch size, C is the feature dimension (channels), and K1, K2, K3 are the spatial dimensions.
-
-        `n_components`: (int) The number of principal components to keep in the output (default is 3).
-
-        `more_contrast`: (bool) Wether to apply the contrast enhancement to the PCA output (a sigmoid).
-                         If this function is used with visualization intentions, then keep it True.
+    `features`: (torch.Tensor) The features to perform PCA on. Accepted shapes are:
+      - (T, C) where T is the number of tokens (patches) and C is the feature dimension (channels).
+      - (B, T, C) where B is the batch size, T is the number of tokens (patches), and C is the feature dimension (channels).
+      - (B, C, K1, K2) where B is the batch size, C is the feature dimension (channels), and K1, K2 are the spatial dimensions.
+      - (B, C, K1, K2, K3) where B is the batch size, C is the feature dimension (channels), and K1, K2, K3 are the spatial dimensions.
+    
+    `n_components`: (int) The number of principal components to keep in the output (default is 3).
+    
+    `more_contrast`: (bool) Wether to apply the contrast enhancement to the PCA output (a sigmoid).
+    If this function is used with visualization intentions, then keep it True.
 
     # Output
 

@@ -1,4 +1,4 @@
-import os, sys, time
+import os, sys
 import argparse
 
 import numpy
@@ -13,29 +13,12 @@ from tkinter import filedialog
 from dinov3easy.load.settings import (
     MODEL_CHECKPOINTS_PATHS_DICT
 )
-from dinov3easy.utils.constants import (
-    IMAGENET_MEAN,
-    IMAGENET_STD
-)
 
+from dinov3easy.view._utils import make_transform
 from dinov3easy.load.load import load_dinov3_models
 from dinov3easy.utils.predict import get_attention_map
-from dinov3easy.view.visualizers import AttentionMapInteractiveVisualizer
+from dinov3easy.visualizers import AttentionMapInteractiveVisualizer
 
-# Functions
-
-def make_transform(resize_size: int | list[int] = 768, mean: list|tuple = IMAGENET_MEAN, std: list|tuple = IMAGENET_STD):
-    to_tensor = transforms.ToTensor()
-    resize = transforms.Resize((resize_size, resize_size), antialias=True)
-    normalize = transforms.Normalize(
-        mean=mean,
-        std=std,
-    )
-    return transforms.Compose([to_tensor, resize, normalize])
-
-
-
-# Logic
 
 def main():
     
@@ -79,10 +62,11 @@ def main():
         img = img.to(device)
         attn_map = get_attention_map(model, img, remove_extra_tokens=True) 
         # shape: (num_patches, num_patches)
-        
-    
+
+    image_to_show = img.detach().cpu().numpy()[0].transpose(1, 2, 0)
+    image_to_show = (image_to_show - image_to_show.min()) / (image_to_show.max() - image_to_show.min())
     _ = AttentionMapInteractiveVisualizer(
-        image = img_.transpose(1, 2, 0),
+        image = image_to_show,
         attention_map = attn_map.detach().cpu().numpy()
     )
     plt.show()

@@ -5,7 +5,7 @@ import torch
 
 # Features
 
-def get_features(dino: torch.nn.Module, x: torch.Tensor) -> torch.Tensor:
+def get_features(dino: torch.nn.Module, x: torch.Tensor, dino_output: bool = False) -> torch.Tensor | tuple[torch.Tensor, torch.Tensor]:
     """Get the features organised as a 2D image with N channels
     
     # Input
@@ -20,12 +20,16 @@ def get_features(dino: torch.nn.Module, x: torch.Tensor) -> torch.Tensor:
         - IMAGENET_STD = (0.229, 0.224, 0.225)
     which can be imported from `dinov3easy.utils.constants`.
 
+    `dino_output`: (bool) If True, give back also the output of the model as it is.
+
     # Output
 
     The feature map of the model.
     If K is the side of the input image, then the output feature map will be:
         - (B, C, K/32, K/32) if dino is convnext-based
         - (B, C, K/16, K/16) if dino is vit-based
+
+    If dino_output is True, outputs a tuple of tensors, secodn tensor is the output of the model.
     """
     # Shape check
     if len(x.shape) != 4:
@@ -44,11 +48,14 @@ def get_features(dino: torch.nn.Module, x: torch.Tensor) -> torch.Tensor:
         raise ValueError(f"Unknown model type: {type(dino)}")
     # Get the output features
     x = x.float()
-    out: torch.Tensor = dino.get_intermediate_layers()[0]
+    out: torch.Tensor = dino.get_intermediate_layers(x)[0]
     features_2d_img_side = int(out.shape[1]**0.5)
     out = out.reshape(out.shape[0], features_2d_img_side, features_2d_img_side, out.shape[2])
     out = out.permute(0, 3, 1, 2).contiguous()
-    return out
+    if not dino_output:
+        return out
+    else:
+        return (out, dino(x))
 
 
 
