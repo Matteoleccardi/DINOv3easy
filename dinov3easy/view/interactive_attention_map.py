@@ -6,7 +6,6 @@ from PIL import Image
 import torch
 from torchvision import transforms
 
-import matplotlib
 import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter import filedialog
@@ -86,6 +85,7 @@ def main():
         image = img_.transpose(1, 2, 0),
         attention_map = attn_map.detach().cpu().numpy()
     )
+    plt.show()
 
 
 
