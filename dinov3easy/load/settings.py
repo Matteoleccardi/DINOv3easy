@@ -2,7 +2,7 @@ import os, sys
 
 _this_file_dir = os.path.dirname(__file__)
 
-DINOV3_REPO_PATH = os.path.join(_this_file_dir, "..", "dinov3")
+DINOV3_REPO_PATH = os.path.join(_this_file_dir, "..", "..", "dinov3")
 
 
 
@@ -29,12 +29,13 @@ _pth_sat_files = [f for f in _pth_files if "sat" in f]
 def _get_corresponding_file(model_name: str):
     _lookin_list = []
     if "sat" in model_name:
+        model_name = model_name.replace("_sat", "")
         _lookin_list = _pth_sat_files
     else:
         _lookin_list = _pth_files
 
     for f in _lookin_list:
-        if model_name in f:
+        if model_name+"_" in f:
             return f
     return None
 
@@ -57,5 +58,8 @@ MODEL_CHECKPOINTS_PATHS_DICT = {
 }
 
 for _key in MODEL_CHECKPOINTS_PATHS_DICT.keys():
-    MODEL_CHECKPOINTS_PATHS_DICT[_key] = _get_corresponding_file(_key)
+    MODEL_CHECKPOINTS_PATHS_DICT[_key] = os.path.join(
+        MODEL_CHECKPOINTS_PATH,    
+        _get_corresponding_file(_key)
+    ) if _get_corresponding_file(_key) is not None else None
     # it is allowed for a model checkpoint to not be available

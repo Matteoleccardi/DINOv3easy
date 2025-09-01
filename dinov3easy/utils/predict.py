@@ -1,14 +1,11 @@
 import torch
 
-from dinov3easy.dinov3.dinov3.models.vision_transformer import DinoVisionTransformer
-from dinov3easy.dinov3.dinov3.models.convnext import ConvNeXt
-
 # Model Output
 # It is enough to do model.forward(x) as any other torch module.
 
 # Features
 
-def get_features(dino: DinoVisionTransformer|ConvNeXt, x: torch.Tensor) -> torch.Tensor:
+def get_features(dino: torch.nn.Module, x: torch.Tensor) -> torch.Tensor:
     """Get the features organised as a 2D image with N channels
     
     # Input
@@ -37,10 +34,10 @@ def get_features(dino: DinoVisionTransformer|ConvNeXt, x: torch.Tensor) -> torch
     if x.shape[2] != x.shape[3]:
         raise ValueError("Input image must be square.")
     # Check if K is a multiple of 16 or 32
-    if isinstance(dino, DinoVisionTransformer):
+    if "DinoVisionTransformer" in str(type(dino)):
         if x.shape[2] % 16 != 0:
             raise ValueError("Input image size must be a multiple of 16 for ViT-based models.")
-    elif isinstance(dino, ConvNeXt):
+    elif "ConvNeXt" in str(type(dino)):
         if x.shape[2] % 32 != 0:
             raise ValueError("Input image size must be a multiple of 32 for ConvNeXt-based models.")
     else:
@@ -57,7 +54,7 @@ def get_features(dino: DinoVisionTransformer|ConvNeXt, x: torch.Tensor) -> torch
 
  # Attention Map
 
-def get_attention_map(dino: DinoVisionTransformer, x: torch.Tensor, remove_extra_tokens: bool = True) -> torch.Tensor:
+def get_attention_map(dino: torch.nn.Module, x: torch.Tensor, remove_extra_tokens: bool = True) -> torch.Tensor:
     """Get the attention map of the model.
     
     # Input
@@ -89,13 +86,10 @@ def get_attention_map(dino: DinoVisionTransformer, x: torch.Tensor, remove_extra
     # Check if image is square
     if x.shape[2] != x.shape[3]:
         raise ValueError("Input image must be square.")
-    # Check if K is a multiple of 16 or 32
-    if isinstance(dino, DinoVisionTransformer):
+    # Check if K is a multiple of 16
+    if "DinoVisionTransformer" in str(type(dino)):
         if x.shape[2] % 16 != 0:
             raise ValueError("Input image size must be a multiple of 16 for ViT-based models.")
-    elif isinstance(dino, ConvNeXt):
-        if x.shape[2] % 32 != 0:
-            raise ValueError("Input image size must be a multiple of 32 for ConvNeXt-based models.")
     else:
         raise ValueError(f"Unknown model type: {type(dino)}")
     # Get the attention map
