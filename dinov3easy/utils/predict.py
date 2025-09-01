@@ -1,41 +1,117 @@
 import torch
 
+from dinov3easy.dinov3.dinov3.models.vision_transformer import DinoVisionTransformer
+from dinov3easy.dinov3.dinov3.models.convnext import ConvNeXt
 
+# Model Output
+# It is enough to do model.forward(x) as any other torch module.
 
-def inference_dino(self, x: torch.Tensor) -> torch.Tensor:
-    # Get the features organised as a 2D image with N channels
-    # x is a 2d image (B, 3, K1, K2) where it should be that K1 = K2 == K
-    # K must be multiple of 32
-    # If K is the side of the input image, then the output feature map will be (B, 3, K/32, K/32)
-    if len(x.shape) != 4 or x.shape[1] != 3:
+# Features
+
+def get_features(dino: DinoVisionTransformer|ConvNeXt, x: torch.Tensor) -> torch.Tensor:
+    """Get the features organised as a 2D image with N channels
+    
+    # Input
+
+    `dino`: the dino model.
+    
+    `x` is a square 2d image (torch.Tensor) of shape (B, 3, K, K)
+    K must be multiple of 32 if dino is convnext-based, of 16 if it is vit-based.
+
+    x should be already standardized. Developers use the ImageNet statistics for this purpose:
+        - IMAGENET_MEAN = (0.485, 0.456, 0.406)
+        - IMAGENET_STD = (0.229, 0.224, 0.225)
+    which can be imported from `dinov3easy.utils.constants`.
+
+    # Output
+
+    The feature map of the model.
+    If K is the side of the input image, then the output feature map will be:
+        - (B, C, K/32, K/32) if dino is convnext-based
+        - (B, C, K/16, K/16) if dino is vit-based
+    """
+    # Shape check
+    if len(x.shape) != 4:
         raise ValueError("Input tensor must be of shape (B, 3, K, K) with K being the image size.")
-    out: torch.Tensor = self.dinov3_model.get_intermediate_layers(x)[0]
+    # Check if image is square
+    if x.shape[2] != x.shape[3]:
+        raise ValueError("Input image must be square.")
+    # Check if K is a multiple of 16 or 32
+    if isinstance(dino, DinoVisionTransformer):
+        if x.shape[2] % 16 != 0:
+            raise ValueError("Input image size must be a multiple of 16 for ViT-based models.")
+    elif isinstance(dino, ConvNeXt):
+        if x.shape[2] % 32 != 0:
+            raise ValueError("Input image size must be a multiple of 32 for ConvNeXt-based models.")
+    else:
+        raise ValueError(f"Unknown model type: {type(dino)}")
+    # Get the output features
+    x = x.float()
+    out: torch.Tensor = dino.get_intermediate_layers()[0]
     features_2d_img_side = int(out.shape[1]**0.5)
     out = out.reshape(out.shape[0], features_2d_img_side, features_2d_img_side, out.shape[2])
     out = out.permute(0, 3, 1, 2).contiguous()
     return out
 
-def extract_3d_features_with_2d_dino(self, x: torch.Tensor):
-    # Maybe useful for later models
-    """Expected shape: (B, 1, I, J, K) with K ranging along the axial direction (z axis)"""
-    # Get the features of the 3D medical image with 1 color channel
-    # using dino in a 2D manner only.
-    #
-    # Dino is trained on natural images found across the internet.
-    # Of those, very few represent CT images, if any.
-    # Of this very small subset, usually CT images are represented in 2D with axial slices
-    # (cutting the torso with  aplane perpendicular to the feet-head axis)
-    # So, it does not make much sense to also slice along the other axes.
-    #
-    # Slices are resamled at 1.24 x 1024 to obtain a finer feature map.
-    # Axial slices are obtained by ranging through the last tensor axis (B, 1, I, J, K) where K -> Z axis
-    if len(x.shape) != 5 or x.shape[1] != 1:
-        raise ValueError("Input tensor must be of shape (B, 1, D, H, W) with D being the depth.")
-    features = []
-    for i in range(x.shape[-1]):
-        slice_2d = x[:, :, :, :, i]
-        features_2d = self.forward_dino(slice_2d)
-        features.append(features_2d)
-    features = torch.stack(features, dim=2)  # (B, C, 32, 32, K)
-    return features
+
+
+ # Attention Map
+
+def get_attention_map(dino: DinoVisionTransformer, x: torch.Tensor, remove_extra_tokens: bool = True) -> torch.Tensor:
+    """Get the attention map of the model.
+    
+    # Input
+
+    `dino`: the dino model. Must be a visual transformer (ViT).
+
+    `x` is a square 2d image (torch.Tensor) of shape (B, 3, K, K)
+    K must be multiple of 16.
+
+    x should be already standardized. Developers use the ImageNet statistics for this purpose:
+        - IMAGENET_MEAN = (0.485, 0.456, 0.406)
+        - IMAGENET_STD = (0.229, 0.224, 0.225)
+    which can be imported from `dinov3easy.utils.constants`.
+
+    # Output
+
+    The attention map of the model (the most informative one).
+    
+    shape: (num_tokens, num_tokens) or (num_patches, num_patches) if remove_extra_tokens is True.
+
+    attn_map[i, j] mean (how much attention is given to patch j when processing patch i).
+
+    Note that the Dino ViT has 5 extra tokens at the beginning that do not come from image patches
+    (first one is the CLS token, the remaining ones I do not know).
+    """
+    # Shape check
+    if len(x.shape) != 4:
+        raise ValueError("Input tensor must be of shape (B, 3, K, K) with K being the image size.")
+    # Check if image is square
+    if x.shape[2] != x.shape[3]:
+        raise ValueError("Input image must be square.")
+    # Check if K is a multiple of 16 or 32
+    if isinstance(dino, DinoVisionTransformer):
+        if x.shape[2] % 16 != 0:
+            raise ValueError("Input image size must be a multiple of 16 for ViT-based models.")
+    elif isinstance(dino, ConvNeXt):
+        if x.shape[2] % 32 != 0:
+            raise ValueError("Input image size must be a multiple of 32 for ConvNeXt-based models.")
+    else:
+        raise ValueError(f"Unknown model type: {type(dino)}")
+    # Get the attention map
+    # This is possible only because I manually modified the Attention layer 
+    # (dinov3 -> layers -> attention.py file)
+    # so that, if the flag is true, attention is computed in the "canonical" way 
+    # (with the attention matrix)
+    # and not with the far more efficient flash attention that the model actually uses.
+    x = x.float()
+    dino.blocks[-1].attn.save_attention_map = True
+    _ = dino(x)
+    attn_map = dino.blocks[-1].attn.attn_map
+    attn_map = attn_map.detach().cpu()
+    attn_map = torch.mean(attn_map.squeeze(0), axis=0) # shape: (num_tokens, num_tokens)
+    if remove_extra_tokens:
+        attn_map = attn_map[5:, 5:] # shape: (num_patches, num_patches)
+    dino.blocks[-1].attn.save_attention_map = False
+    return attn_map
 

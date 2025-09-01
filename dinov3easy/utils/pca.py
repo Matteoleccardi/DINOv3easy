@@ -2,16 +2,26 @@ import numpy
 import torch
 from sklearn.decomposition import PCA
 
-def pca_of_features(features: torch.Tensor | numpy.ndarray, n_components=3) -> numpy.ndarray:
+def pca_of_features(features: torch.Tensor | numpy.ndarray, n_components: int = 3, more_contrast: bool = True) -> numpy.ndarray:
     """
-    Perform PCA on the features extracted from DINOv3 model or any other model.
+    Perform PCA on the features extracted from DINOv3 model (or any other model).
 
     # Input
-        `features`: The features to perform PCA on. Accepted shapes are:
+
+        `features`: (torch.Tensor) The features to perform PCA on. Accepted shapes are:
         - (T, C) where T is the number of tokens (patches) and C is the feature dimension (channels).
         - (B, T, C) where B is the batch size, T is the number of tokens (patches), and C is the feature dimension (channels).
         - (B, C, K1, K2) where B is the batch size, C is the feature dimension (channels), and K1, K2 are the spatial dimensions.
         - (B, C, K1, K2, K3) where B is the batch size, C is the feature dimension (channels), and K1, K2, K3 are the spatial dimensions.
+
+        `n_components`: (int) The number of principal components to keep in the output (default is 3).
+
+        `more_contrast`: (bool) Wether to apply the contrast enhancement to the PCA output (a sigmoid).
+                         If this function is used with visualization intentions, then keep it True.
+
+    # Output
+
+    The PCA-transformed features of same shape as `features`, but with `n_components` channels.
     """
     # Convert to numpy array
     if isinstance(features, torch.Tensor):
@@ -42,7 +52,8 @@ def pca_of_features(features: torch.Tensor | numpy.ndarray, n_components=3) -> n
     # Perform PCA
     pca = PCA(n_components=n_components, whiten=True)
     pca_result = pca.fit_transform(features.reshape(B*T, C)) # pca_results shape: (n_in_batch*n_patches, components)
-    pca_result = 1 / (1 + numpy.exp(-pca_result * 2.0))  # sigmoid
+    if more_contrast:
+        pca_result = 1 / (1 + numpy.exp(-pca_result * 2.0))  # sigmoid
     # Reshape back to original shape except channel dim, which will be n_components
     if len(original_shape) == 2:
         pca_features = pca_result

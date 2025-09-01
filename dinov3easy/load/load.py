@@ -1,6 +1,6 @@
 import torch
 
-from settings import DINOV3_REPO_PATH, MODEL_CHECKPOINTS_PATHS_DICT
+from dinov3easy.load.settings import DINOV3_REPO_PATH, MODEL_CHECKPOINTS_PATHS_DICT
 
 def load_dinov3_models(model_type) -> torch.nn.Module:
     if model_type not in MODEL_CHECKPOINTS_PATHS_DICT:
