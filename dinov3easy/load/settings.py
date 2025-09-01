@@ -1,4 +1,4 @@
-import os
+import os, sys
 
 _this_file_dir = os.path.dirname(__file__)
 
@@ -7,36 +7,23 @@ DINOV3_REPO_PATH = os.path.join(_this_file_dir, "..", "dinov3")
 
 
 # MODEL_CHECKPOINTS_PATH
+_checkpoints_location_file = os.path.join(_this_file_dir, "..", "checkpoints", "checkpoints_location.txt")
+MODEL_CHECKPOINTS_PATH = open(_checkpoints_location_file).read().strip()
 
-_package_checkpoints_path = os.path.join(_this_file_dir, "..", "checkpoints")
+if not os.path.isdir(MODEL_CHECKPOINTS_PATH):
+    print(f"Warning: The specified MODEL_CHECKPOINTS_PATH does not exist or is not a directory:\n\t{MODEL_CHECKPOINTS_PATH}")
+    print("Please run the script dinov3easy/setup/checkpoints.py to set the correct path.")
+    sys.exit(1)
 
-_list_of_files = os.listdir(_package_checkpoints_path) if os.path.exists(_package_checkpoints_path) else []
-_list_of_files = [l for l in _list_of_files if l.endswith(".pth")]
-
-if len(_list_of_files) != 0:
-    MODEL_CHECKPOINTS_PATH = os.path.join(_package_checkpoints_path)
-else:
-    _location_txt_file_path = os.path.join(_package_checkpoints_path, "checkpoints_location.txt")
-    if os.path.exists(_location_txt_file_path):
-        _content = open(_location_txt_file_path).read()
-        _content = _content.strip()
-        _content = str(os.path.normpath(_content))
-        if os.path.exists(_content):
-            MODEL_CHECKPOINTS_PATH = _content
-            _files = os.listdir(MODEL_CHECKPOINTS_PATH)
-            _files = [f for f in _files if f.endswith(".pth")]
-            if len(_files) == 0:
-                raise ValueError("Cannot find the dinov3 weights. Please read dinov3easy/checkpoints/download_instructions.md.")
-        else:
-            raise ValueError("Cannot find the dinov3 weights. Please read dinov3easy/checkpoints/download_instructions.md.")
-    else:
-        raise ValueError("Location specified in dinov3easy/checkpoints/checkpoints_location.txt not found. Please read dinov3easy/checkpoints/download_instructions.md.")
-
+_pth_files = [f for f in os.listdir(MODEL_CHECKPOINTS_PATH) if f.endswith(".pth")]
+if len(_pth_files) == 0:
+    print(f"No .pth files found in the specified MODEL_CHECKPOINTS_PATH:\n\t{MODEL_CHECKPOINTS_PATH}")
+    print("Check again their existence, and be sure that the file extension is '.pth'")
+    sys.exit(1)
 
 
 # MODEL_CHECKPOINTS_PATHS_DICT
 
-_pth_files = [f for f in os.listdir(MODEL_CHECKPOINTS_PATH) if f.endswith(".pth")]
 _pth_sat_files = [f for f in _pth_files if "sat" in f]
 
 def _get_corresponding_file(model_name: str):
@@ -71,5 +58,4 @@ MODEL_CHECKPOINTS_PATHS_DICT = {
 
 for _key in MODEL_CHECKPOINTS_PATHS_DICT.keys():
     MODEL_CHECKPOINTS_PATHS_DICT[_key] = _get_corresponding_file(_key)
-    if MODEL_CHECKPOINTS_PATHS_DICT[_key] is None:
-        raise ValueError(f"Cannot find the checkpoint for model {_key}. Please investigate and read dinov3easy/checkpoints/download_instructions.md.")
+    # it is allowed for a model checkpoint to not be available

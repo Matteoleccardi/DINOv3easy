@@ -1,0 +1,7 @@
+# only keep the vis16 (smallest) model checkpoint
+*convnext*
+*vit7*
+*vith*
+*vitl*
+*vitb*
+*vits16plus*

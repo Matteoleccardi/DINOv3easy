@@ -1,0 +1,1 @@
+/scratch_net/magnum/mleccardi/Repos/DINOv3easy/dinov3easy/checkpoints
