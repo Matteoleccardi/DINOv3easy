@@ -1,0 +1,3 @@
+include dinov3easy/checkpoints/*.txt
+include dinov3easy/checkpoints/*.pth
+include dinov3easy/checkpoints/*.md
