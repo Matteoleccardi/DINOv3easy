@@ -28,5 +28,5 @@ dependencies = [
     "omegaconf",
     "regex",
     "submitit",
-    "termcolor"
+    "termcolor",
 ]
