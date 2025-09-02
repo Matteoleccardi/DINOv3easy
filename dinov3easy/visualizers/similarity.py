@@ -68,8 +68,6 @@ class SimilarityMapInteractiveVisualizer():
 
         self.patch_size = int(image.shape[0] / features.shape[-1]) # assuming square image and square features
 
-        print("-----", self.patch_size, self.features.shape, self.image.shape)
-
         self.attention_colormap = cm.get_cmap("Reds")
 
         self.fig, axes = plt.subplots(1, 2)

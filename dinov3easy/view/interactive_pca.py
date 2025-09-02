@@ -18,15 +18,7 @@ from dinov3easy.utils.pca import pca_of_features
 
 
 
-def run(img_path: str|None = None):
-    # Parser
-    parser = argparse.ArgumentParser(description="Visualize DINOv3 features PCA-decomposed.")
-    parser.add_argument("--model", type=str, default="dinov3_vits16", choices=AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT.keys(), help="Type of DINOv3 model to use.")
-    parser.add_argument("--img_size", type=int, default=1024, help="Size to resize images to.")
-    args = parser.parse_args()
-    
-    img_size = args.img_size
-    model_type = args.model
+def run(model_type: str = 'dinov3_vits16', img_resize: int = 1024, img_path: str|None = None):
 
     if img_path is None:
         root = tk.Tk()
@@ -46,7 +38,7 @@ def run(img_path: str|None = None):
     mean_ = tuple(img_.mean(axis=(1, 2), keepdims=True).flatten().tolist())
     std_ = tuple(img_.std(axis=(1, 2), keepdims=True).flatten().tolist())
 
-    transform = make_transform(img_size)
+    transform = make_transform(img_resize)
     img: torch.Tensor = transform(img).unsqueeze(0)
 
     # Load model
@@ -67,7 +59,7 @@ def run(img_path: str|None = None):
     plt.figure()
     plt.imshow(pca_result[..., :3])
     plt.axis('off')
-    plt.title(f"{model_type}, {img_size}x{img_size}")
+    plt.title(f"{model_type}, {img_resize}x{img_resize}")
     plt.tight_layout()
     plt.show()
 
@@ -79,10 +71,16 @@ def run(img_path: str|None = None):
         im = ax.imshow(pca_result[..., i], cmap='hot')
         ax.set_title(f"{i}", fontsize=8)
         ax.axis('off')
-    plt.suptitle(f"{model_type}, {img_size}x{img_size}", fontsize=12)
+    plt.suptitle(f"{model_type}, {img_resize}x{img_resize}", fontsize=12)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
 
 if __name__ == "__main__":
+    # Parser
+    parser = argparse.ArgumentParser(description="Visualize DINOv3 features PCA-decomposed.")
+    parser.add_argument("--model", type=str, default="dinov3_vits16", choices=AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT.keys(), help="Type of DINOv3 model to use.")
+    parser.add_argument("--img_resize", type=int, default=1024, help="Size to resize images to.")
+    args = parser.parse_args()
+
     run()

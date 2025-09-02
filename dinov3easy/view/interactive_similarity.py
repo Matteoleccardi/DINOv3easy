@@ -17,16 +17,8 @@ from dinov3easy.utils.predict import get_features
 from dinov3easy.visualizers import SimilarityMapInteractiveVisualizer
 
 
-def run(img_path: str|None = None):
-    # Parser
-    parser = argparse.ArgumentParser(description="Visualize DINOv3 features map cosine similarity interactively.")
-    parser.add_argument("--model", type=str, default="dinov3_vits16", choices=AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT.keys(), help="Type of DINOv3 model to use.")
-    parser.add_argument("--img_size", type=int, default=1024, help="Size to resize images to.")
-    args = parser.parse_args()
+def run(model_type: str = 'dinov3_vits16', img_resize: int = 1024, img_path: str|None = None):
     
-    img_size = args.img_size
-    model_type = args.model
-
     # Load one image
     if img_path is None:
         root = tk.Tk()
@@ -46,8 +38,8 @@ def run(img_path: str|None = None):
     mean_ = tuple(img_.mean(axis=(1, 2), keepdims=True).flatten().tolist())
     std_ = tuple(img_.std(axis=(1, 2), keepdims=True).flatten().tolist())
 
-    transform = make_transform(img_size)
-    img: torch.Tensor = transform(img).unsqueeze(0) # shape: (1, 3, img_size, img_size)
+    transform = make_transform(img_resize)
+    img: torch.Tensor = transform(img).unsqueeze(0) # shape: (1, 3, img_resize, img_resize)
 
     # Load model
 
@@ -71,4 +63,10 @@ def run(img_path: str|None = None):
 
 
 if __name__ == "__main__":
+    # Parser
+    parser = argparse.ArgumentParser(description="Visualize DINOv3 features map cosine similarity interactively.")
+    parser.add_argument("--model", type=str, default="dinov3_vits16", choices=AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT.keys(), help="Type of DINOv3 model to use.")
+    parser.add_argument("--img_resize", type=int, default=1024, help="Size to resize images to.")
+    args = parser.parse_args()
+
     run()

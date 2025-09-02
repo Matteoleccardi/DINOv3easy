@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dinov3easy"
-version = "2025.09.02-009"
+version = "2025.09.02-011"
 description = "A DINOv3 wrapper that simplifies usage and visualization."
 readme = "README.md"
 authors = [

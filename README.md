@@ -39,6 +39,8 @@ You can install the repo and use the helper functions found in the many sub-modu
 
 For quick, interactive visualization, you can run the scripts found in `./dinov3easy/view/interactive*` directly, or you can import them in another script and run the `run()` method.
 
+See the [examples](./EXAMPLES.md) to get an idea on what you can do with this, or check the source code of the scripts in `dinov3easy/view/`.
+
 ## Note that...
 
 `dinov3` -> `dinov3` -> `layers` -> `attention` modified from the original one to compute the attention matrix explicitly upon request, useful for later visualization.
