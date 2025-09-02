@@ -17,23 +17,22 @@ Simple as that!
 
 `model_type` can be chosen from the following list:
 
-```md
 - ViT models (can have attention map)
-    - 'dinov3_vits16'
-    - 'dinov3_vits16plus'
-    - 'dinov3_vitb16'
-    - 'dinov3_vitl16'
-    - 'dinov3_vith16plus'
-    - 'dinov3_vit7b16'
+    - `'dinov3_vits16'`
+    - `'dinov3_vits16plus'`
+    - `'dinov3_vitb16'`
+    - `'dinov3_vitl16'`
+    - `'dinov3_vith16plus'`
+    - `'dinov3_vit7b16'`
 - ConvNeXt models (no attention map)
-    - 'dinov3_convnext_tiny'
-    - 'dinov3_convnext_small'
-    - 'dinov3_convnext_base'
-    - 'dinov3_convnext_large'
+    - `'dinov3_convnext_tiny'`
+    - `'dinov3_convnext_small'`
+    - `'dinov3_convnext_base'`
+    - `'dinov3_convnext_large'`
 - ViT for satellite images
-    - 'dinov3_vitl16_sat'
-    - 'dinov3_vit7b16_sat'
-```
+    - `'dinov3_vitl16_sat'`
+    - `'dinov3_vit7b16_sat'`
+
 
 ## Inference with dinov3
 
@@ -111,7 +110,7 @@ from dinov3easy.view.interactive_class_similarity import run
 run()
 ```
 
-**Note**
+**Note that:**
 
 You can also specify the dinov3 model, image resize and image path directly to the run() function instead of using the interactive GUI (use full path): 
 
