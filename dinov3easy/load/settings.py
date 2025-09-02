@@ -7,7 +7,10 @@ DINOV3_REPO_PATH = os.path.join(_this_file_dir, "..", "..", "dinov3")
 
 
 # MODEL_CHECKPOINTS_PATH
-_checkpoints_location_file = os.path.join(_this_file_dir, "..", "checkpoints", "checkpoints_location.txt")
+_checkpoints_location_file = os.path.join(
+        os.path.split(_this_file_dir)[0],
+        "checkpoints", "checkpoints_location.txt"
+    )
 MODEL_CHECKPOINTS_PATH = open(_checkpoints_location_file).read().strip()
 
 if not os.path.isdir(MODEL_CHECKPOINTS_PATH):
