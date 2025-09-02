@@ -2,7 +2,12 @@ import os, sys
 
 _this_file_dir = os.path.dirname(__file__)
 
-DINOV3_REPO_PATH = os.path.join(_this_file_dir, "..", "..", "dinov3")
+DINOV3_REPO_PATH = os.path.join(
+    os.path.split(
+        os.path.split(_this_file_dir)
+    ),
+    "dinov3"
+)
 
 
 

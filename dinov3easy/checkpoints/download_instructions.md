@@ -8,14 +8,14 @@ If you installed this repo as a package (following the instructions in the main 
 
 ```py
 # If you have a screen on your machine
-import dinov3easy
-dinov3easy.setup.checkpoints.run()
+from dinov3easy.setup.checkpoints import run
+run()
 ```
 
 ```py
 # On a headless server
-import dinov3easy
-dinov3easy.setup.checkpoints.run(use_gui=False)
+from dinov3easy.setup.checkpoints import run
+run(use_gui=False)
 ```
 
 Follow the instructions.
