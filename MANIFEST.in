@@ -1,3 +1,5 @@
-include dinov3easy/checkpoints/*.txt
-include dinov3easy/checkpoints/*.pth
-include dinov3easy/checkpoints/*.md
+# Keep dinov3 forked repo
+recursive-include dinov3easy/dinov3 *
+
+# Keep the checkpoints directory
+include dinov3easy/checkpoints/*
