@@ -18,12 +18,12 @@ classifiers = [
 ]
 dependencies = [
     "numpy",
+    "pillow",
     "torch",
     "torchmetrics",
     "torchvision",
-    "scikit-learn,"
+    "scikit-learn",
     "matplotlib",
-    "pillow",
     "ftfy",
     "omegaconf",
     "regex",
