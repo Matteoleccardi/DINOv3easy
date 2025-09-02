@@ -1,4 +1,3 @@
-import torch
 from torchvision import transforms
 
 from dinov3easy.utils.constants import (
@@ -14,3 +13,5 @@ def make_transform(resize_size: int | list[int] = 768, mean: list|tuple = IMAGEN
         std=std,
     )
     return transforms.Compose([to_tensor, resize, normalize])
+
+TKINTER_ALLOWED_IMAGE_FILES = [("Image files", "*.jpg *.jpeg *.png *.bmp *.tiff *.webp"), ("All files", "*.*")]

@@ -4,27 +4,23 @@ import argparse
 import numpy
 from PIL import Image
 import torch
-from torchvision import transforms
 
 import matplotlib.pyplot as plt
 import tkinter as tk
 from tkinter import filedialog
 
-from dinov3easy.load.settings import (
-    MODEL_CHECKPOINTS_PATHS_DICT
-)
+from dinov3easy.load.settings import AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT
 
-from dinov3easy.view._utils import make_transform
+from dinov3easy.view._utils import make_transform, TKINTER_ALLOWED_IMAGE_FILES
 from dinov3easy.load.load import load_dinov3_models
 from dinov3easy.utils.predict import get_attention_map
 from dinov3easy.visualizers import AttentionMapInteractiveVisualizer
 
 
-def main():
-    
-    # program args
+def run(img_path: str|None = None):
+    # Parser
     parser = argparse.ArgumentParser(description="Visualize DINOv3 attention map interactively.")
-    parser.add_argument("--model", type=str, default="dinov3_vits16", choices=MODEL_CHECKPOINTS_PATHS_DICT.keys(), help="Type of DINOv3 model to use.")
+    parser.add_argument("--model", type=str, default="dinov3_vits16", choices=AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT.keys(), help="Type of DINOv3 model to use.")
     parser.add_argument("--img_size", type=int, default=1024, help="Size to resize images to.")
     args = parser.parse_args()
     
@@ -32,16 +28,17 @@ def main():
     model_type = args.model
 
     # Load one image
-    root = tk.Tk()
-    root.withdraw()
-    img_path = filedialog.askopenfilename(
-        initialdir=os.path.expanduser("~"),
-        title="Select an image file (2d)",
-        filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp *.tiff")]
-    )
-    if not img_path:
-        print("No image selected, exiting.")
-        sys.exit(0)
+    if img_path is None:
+        root = tk.Tk()
+        root.withdraw()
+        img_path = filedialog.askopenfilename(
+            initialdir=os.path.expanduser("~"),
+            title="Select an image file (2d)",
+            filetypes=TKINTER_ALLOWED_IMAGE_FILES
+        )
+        if not img_path:
+            print("No image selected, exiting.")
+            sys.exit(0)
 
     img = Image.open(img_path).convert("RGB")
 
@@ -75,4 +72,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()

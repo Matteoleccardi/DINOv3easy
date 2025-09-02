@@ -63,3 +63,8 @@ for _key in MODEL_CHECKPOINTS_PATHS_DICT.keys():
         _get_corresponding_file(_key)
     ) if _get_corresponding_file(_key) is not None else None
     # it is allowed for a model checkpoint to not be available
+
+AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT = {}
+for _key, _value in MODEL_CHECKPOINTS_PATHS_DICT.items():
+    if _value is not None:
+        AVAILABLE_MODEL_CHECKPOINTS_PATHS_DICT[_key] = _value
