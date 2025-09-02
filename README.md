@@ -1,4 +1,8 @@
-# DINOv3easy: Your DINOv3 Companion!
+<p align="center">
+  <img src="./assets/easy_dino.png" alt="A relaxed dinosaur">
+</p>
+
+# dinov3easy: Your DINOv3 Companion!
 
 Simple, self-contained wrapper around Meta's DINO v3 repo that simplifies model loading and features analysis.
 
