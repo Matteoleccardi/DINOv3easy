@@ -4,8 +4,8 @@ _this_file_dir = os.path.dirname(__file__)
 
 DINOV3_REPO_PATH = os.path.join(
     os.path.split(
-        os.path.split(_this_file_dir)
-    ),
+        os.path.split(_this_file_dir)[0]
+    )[0],
     "dinov3"
 )
 
