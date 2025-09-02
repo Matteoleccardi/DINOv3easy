@@ -1,34 +1,40 @@
 # DINOv3easy: Your DINOv3 Companion!
 
-Simple, self-contained wrapper around Meta's DINO v3 repo that simlifies model loading and features analysis.
+Simple, self-contained wrapper around Meta's DINO v3 repo that simplifies model loading and features analysis.
 
-Some considerations that might prove useful:
-
-- 
-
-
+This package also includes the [original dinov3 repository](https://github.com/facebookresearch/dinov3) from facebookresearch. The repo was slighly modified to add easier visualization and inspection functionality (see the *Note that...* section down below).
 
 ## Get Started with DINO v3
 
 This is an installable package, so just do:
 
 ```bash
-# create the venv of your choice and activate it
+# create the venv of your choice and activate it, then run
 python -m pip install git+https://github.com/Matteoleccardi/DINOv3easy.git
 ```
 
-You will have to download the dinov3 weights from the facebookresearch repository. By default here, only the weights
-of `dinov3_vits16` are downloaded, the others are too heavy for github.
+Note that if you want to use this package with GPU support for pytorch, now you have to -reinstall pytorch on your own (see [pytorch website](https://pytorch.org/get-started/locally/)):
 
-Please follow the quick steps explained in [dinov3easy/checkpoints/download_instructions](./dinov3easy/checkpoints/download_instructions.md)
+```bash
+# Choose the cuda version according to your gpu drivers (run nvidia-smi to find out the closest version)
+python -m pip install --upgrade torch torchvision --index-url https://download.pytorch.org/whl/cu126
+```
+
+You will have to download the dinov3 weights following the instructions in the [original dinov3 repository](https://github.com/facebookresearch/dinov3). By default here, only the weights
+of `dinov3_vits16` are available (~80 MB), the others are too heavy for github to store.
+
+After downloading, please follow the quick steps explained in [dinov3easy/checkpoints/download_instructions](./dinov3easy/checkpoints/download_instructions.md)
 
 ## How to use it
 
 You can install the repo and use the helper functions found in the many sub-modules.
 
-For quick, interactive visualization, you can run the scripts found in `./dinov3easy/view/interactive*`.
-
+For quick, interactive visualization, you can run the scripts found in `./dinov3easy/view/interactive*` directly, or you can import them in another script and run the `run()` method.
 
 ## Note that...
 
-dinov3 -> dinov3 -> layers -> attention modified from the original one to compute the attention matrix explicitly upon request, useful for later visualization.
+`dinov3` -> `dinov3` -> `layers` -> `attention` modified from the original one to compute the attention matrix explicitly upon request, useful for later visualization.
+
+## Contact
+
+If you find bugs or something does not work, open an Issue on github at [this link](https://github.com/Matteoleccardi/DINOv3easy), or contact me at `matteo.leccardi@polimi.it`.
