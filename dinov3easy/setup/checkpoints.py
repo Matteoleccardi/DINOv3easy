@@ -5,14 +5,17 @@ import tkinter
 from tkinter import filedialog
 
 
-def ask_user_specify_checkpoints_location(gui: bool = True):
+def _ask_user_specify_checkpoints_location(gui: bool = True):
     # Asks the user (via command line or gui) to select one random model checkpoint,
     # and writes the folder of that checkpoint into the
     # ./../checkpoints/checkpoints_location.txt
 
     # Get location of file path holder file
     this_file_folder = os.path.dirname(os.path.abspath(__file__))
-    checkpoints_location_file = os.path.join(this_file_folder, "..", "checkpoints", "checkpoints_location.txt")
+    checkpoints_location_file = os.path.join(
+        os.path.split(this_file_folder)[0],
+        "checkpoints", "checkpoints_location.txt"
+    )
     # Ask directory
     if gui:
         root = tkinter.Tk()
@@ -44,11 +47,15 @@ def ask_user_specify_checkpoints_location(gui: bool = True):
     print("Success!!")
     print(f"Checkpoint folder set to:\n\t{checkpoint_folder}\nContaining {len(pth_files_list)} .pth files.")
 
-
-if __name__ == "__main__":
-    
+def run(use_gui: bool|None = None):
     parser = argparse.ArgumentParser(description="Set the location of the DINOv3 model checkpoints.")
     parser.add_argument("--no-gui", action="store_true", help="Use command line input instead of GUI to specify the checkpoint folder.")
     args = parser.parse_args()
 
-    ask_user_specify_checkpoints_location(gui=not args.no_gui)
+    gui = not args.no_gui if use_gui is None else use_gui
+
+    _ask_user_specify_checkpoints_location(gui=gui)
+
+if __name__ == "__main__":
+    run()
+    

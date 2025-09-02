@@ -20,8 +20,16 @@ Note that if you want to use this package with GPU support for pytorch, now you 
 python -m pip install --upgrade torch torchvision --index-url https://download.pytorch.org/whl/cu126
 ```
 
-You will have to download the dinov3 weights following the instructions in the [original dinov3 repository](https://github.com/facebookresearch/dinov3). By default here, only the weights
-of `dinov3_vits16` are available (~80 MB), the others are too heavy for github to store.
+*Note*: If you encounter error during installation, it is probably an out-of-space error. Run this command below:
+
+```bash
+TMPDIR=/path/to/dir/with/lots/of/free/space python -m pip install git+https://github.com/Matteoleccardi/DINOv3easy.git
+# after installation, you can delete that dir, but it will probably be empty
+```
+
+## Get your weights
+
+You will have to download the dinov3 weights following the instructions in the [original dinov3 repository](https://github.com/facebookresearch/dinov3). By default here, only the weights of `dinov3_vits16` are available (~80 MB), the others are too heavy for github to store.
 
 After downloading, please follow the quick steps explained in [dinov3easy/checkpoints/download_instructions](./dinov3easy/checkpoints/download_instructions.md)
 
