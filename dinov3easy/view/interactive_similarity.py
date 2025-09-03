@@ -69,4 +69,4 @@ if __name__ == "__main__":
     parser.add_argument("--img_resize", type=int, default=1024, help="Size to resize images to.")
     args = parser.parse_args()
 
-    run()
+    run(model_type=args.model, img_resize=args.img_resize)

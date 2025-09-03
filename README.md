@@ -43,7 +43,7 @@ You can install the repo and use the helper functions found in the many sub-modu
 
 For quick, interactive visualization, you can run the scripts found in `./dinov3easy/view/interactive*` directly, or you can import them in another script and run the `run()` method.
 
-See the [examples](./EXAMPLES.md) to get an idea on what you can do with this, or check the source code of the scripts in `dinov3easy/view/`.
+See the [examples](./examples/EXAMPLES.md) to get an idea on what you can do with this, or check the source code of the scripts in `dinov3easy/view/`.
 
 ## Note that...
 
@@ -52,3 +52,6 @@ See the [examples](./EXAMPLES.md) to get an idea on what you can do with this, o
 ## Contact
 
 If you find bugs or something does not work, open an Issue on github at [this link](https://github.com/Matteoleccardi/DINOv3easy), or contact me at `matteo.leccardi@polimi.it`.
+
+Enjoy!
+*By Matteo Leccardi and Nico Schulthess.*

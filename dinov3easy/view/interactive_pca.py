@@ -71,7 +71,7 @@ def run(model_type: str = 'dinov3_vits16', img_resize: int = 1024, img_path: str
         im = ax.imshow(pca_result[..., i], cmap='hot')
         ax.set_title(f"{i}", fontsize=8)
         ax.axis('off')
-    plt.suptitle(f"{model_type}, {img_resize}x{img_resize}", fontsize=12)
+    plt.suptitle(f"PCA decomposition (top 3 components) of image features.\n{model_type}, {img_resize}x{img_resize}", fontsize=8)
     plt.tight_layout(rect=[0, 0.03, 1, 0.95])
     plt.show()
 
@@ -83,4 +83,4 @@ if __name__ == "__main__":
     parser.add_argument("--img_resize", type=int, default=1024, help="Size to resize images to.")
     args = parser.parse_args()
 
-    run()
+    run(model_type=args.model, img_resize=args.img_resize)

@@ -123,3 +123,9 @@ run(model_type='dinov3_vitb16', img_resize=1024, img_path = '/full/path/to/image
 
 You have to find a way to transform your image intensities, whatever they are, into a \[0;255\] or \[0;1\] range that makes sense.
 You can also use specific mean and standard deviation to standardize the input, but results can vary since dino was trained using specifically those values. 
+
+
+
+
+Enjoy!
+*By Matteo Leccardi and Nico Schulthess.*
